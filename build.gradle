@@ -14,15 +14,13 @@ repositories {
 }
 
 dependencies {
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	
-	testCompile group: 'com.h2database', name: 'h2', version: '1.4.199'
-	
+	runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'org.springframework:spring-jdbc:+' //jdbc 추가
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
-	
 	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
 }
