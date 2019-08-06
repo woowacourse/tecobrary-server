@@ -27,7 +27,7 @@ public class Book {
     @Column(nullable = true, length = 255)
     private String publisher;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 255,unique = true)
     private String isbn;
 
     @Column(nullable = true, length = 255)
