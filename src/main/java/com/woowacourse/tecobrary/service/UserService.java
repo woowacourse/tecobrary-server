@@ -21,6 +21,11 @@ public class UserService {
         return Collections.unmodifiableList(userRepository.findAll());
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
     public void saveCurrentGithubUser() {
         User user = User.registerGithubUser();
         if (userRepository.findByGithubId(user.getGithubId()).isPresent()) {

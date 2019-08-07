@@ -3,9 +3,7 @@ package com.woowacourse.tecobrary.controller;
 import com.woowacourse.tecobrary.domain.User;
 import com.woowacourse.tecobrary.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,11 +20,16 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> readUser() {
+    public List<User> readUsers() {
         return userService.findAll();
     }
 
-    @GetMapping("register/github")
+    @GetMapping("/{id}")
+    public User readUser(@PathVariable Long id) {
+        return userService.findById(id);
+    }
+
+    @PostMapping("register/github")
     public void registerGithubUser(HttpServletResponse response) throws IOException {
         userService.saveCurrentGithubUser();
     }
