@@ -69,4 +69,8 @@ public class User {
                 .avatar(map.getOrDefault("avatar_url", null))
                 .build();
     }
+
+    public void updateName(String newName) {
+        this.name = newName;
+    }
 }

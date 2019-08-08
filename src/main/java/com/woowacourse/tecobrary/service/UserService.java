@@ -5,6 +5,7 @@ import com.woowacourse.tecobrary.domain.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,5 +34,12 @@ public class UserService {
         }
         userRepository.save(user);
         log.debug("User saved : {}", user);
+    }
+
+    @Transactional
+    public void updateUserName(Long id, String newName) {
+        User user = findById(id);
+        user.updateName(newName);
+        log.debug("User updated : {}", user);
     }
 }

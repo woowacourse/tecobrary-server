@@ -29,10 +29,16 @@
     <div>
         <button onClick="logout()" class="btn btn-primary">Logout</button>
     </div>
+    <div>
+        <button onClick="register()" class="btn btn-primary">register</button>
+    </div>
+    <div>
+        <button onClick="editRequest()" class="btn btn-primary">editToNew</button>
+    </div>
 </div>
 </body>
 <script type="text/javascript">
-    $.get("/users", function(data) {
+    $.get("/users/1", function(data) {
         $("#user").html(data.userAuthentication.details.name);
         $(".unauthenticated").hide()
         $(".authenticated").show()
@@ -58,7 +64,44 @@
             }
           }
         }
+    });
+
+    function AjaxCall(method) {
+        $.ajax({
+            type: method,
+            url : "json.php?mode=" + method,
+            data: createData(),
+            dataType:"json",
+            success : function(data, status, xhr) { console.log(data); },
+            error: function(jqXHR, textStatus,
+            errorThrown) { console.log(jqXHR.responseText);
+         }
         });
+    }
+
+    var register = () => {
+        $.ajax({
+            type: 'POST',
+            url: '/users/register/github',
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var editRequest = () => {
+        $.ajax({
+            type: 'PUT',
+            url: '/users/1',
+            data: JSON.stringify ({
+                "newName" : "new name"
+            }),
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
 </html>
