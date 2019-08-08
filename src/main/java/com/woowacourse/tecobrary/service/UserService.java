@@ -42,4 +42,8 @@ public class UserService {
         user.updateName(newName);
         log.debug("User updated : {}", user);
     }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
 }

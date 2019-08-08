@@ -39,6 +39,11 @@ public class UserController {
         userService.updateUserName(id, (String) map.get("newName"));
     }
 
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+
     @PostMapping("register/github")
     public void registerGithubUser(HttpServletResponse response) {
         userService.saveCurrentGithubUser();

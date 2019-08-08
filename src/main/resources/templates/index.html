@@ -35,6 +35,9 @@
     <div>
         <button onClick="editRequest()" class="btn btn-primary">editToNew</button>
     </div>
+    <div>
+        <button onClick="deleteRequest()" class="btn btn-danger">DELETE</button>
+    </div>
 </div>
 </body>
 <script type="text/javascript">
@@ -96,6 +99,16 @@
             data: JSON.stringify ({
                 "newName" : "new name"
             }),
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var deleteRequest = () => {
+        $.ajax({
+            type: 'DELETE',
+            url: '/users/1',
             success: function(data) { alert('data: ' + data); },
             contentType: "application/json",
             dataType: 'json'
