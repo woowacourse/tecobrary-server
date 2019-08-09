@@ -1,10 +1,12 @@
 package com.woowacourse.tecobrary.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.*;
 
+@Builder
 @Entity
 @Getter
 @ToString
