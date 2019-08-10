@@ -81,6 +81,27 @@ class WishControllerTest {
                 .body("title", equalTo(NEW_TITLE));
     }
 
+    @Test
+    @DisplayName("희망 도서를 찾는 url 을 요청한다.")
+    void findByTitle() {
+        given().
+                contentType(String.valueOf(MediaType.APPLICATION_JSON_UTF8))
+                .param("title", TITLE)
+        .when()
+                .get("/wishes")
+        .then()
+                .assertThat()
+                .statusCode(is(200))
+                .body("id", equalTo(Integer.parseInt(wishId)))
+                .body("image", equalTo(IMAGE))
+                .body("title", equalTo(TITLE))
+                .body("author", equalTo(AUTHOR))
+                .body("publisher", equalTo(PUBLISHER))
+                .body("isbn", equalTo(ISBN))
+                .body("desc", equalTo(DESC))
+                .body("userId", equalTo(Math.toIntExact(USER_ID)));
+    }
+
     @AfterEach
     void tearDown() {
         wishRepository.deleteAll();
