@@ -3,6 +3,7 @@ package com.woowacourse.tecobrary.service;
 import com.woowacourse.tecobrary.controller.dto.WishRequestDto;
 import com.woowacourse.tecobrary.domain.model.Wish;
 import com.woowacourse.tecobrary.repository.WishRepository;
+import com.woowacourse.tecobrary.service.dto.WishResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
@@ -49,4 +54,20 @@ class WishServiceTest {
         verify(wishRepository, atLeast(1)).save(WISH);
     }
 
+    @Test
+    @DisplayName("희망 도서를 찾는다.")
+    void findByTitle() {
+        given(wishRepository.findByTitle(TITLE)).willReturn(Optional.of(WISH));
+
+        WishResponseDto wishResponseDto = wishService.findByHopeBookTitle(TITLE);
+
+        assertThat(wishResponseDto.getTitle()).isEqualTo(TITLE);
+        assertThat(wishResponseDto.getImage()).isEqualTo(IMAGE);
+        assertThat(wishResponseDto.getAuthor()).isEqualTo(AUTHOR);
+        assertThat(wishResponseDto.getPublisher()).isEqualTo(PUBLISHER);
+        assertThat(wishResponseDto.getDesc()).isEqualTo(DESC);
+        assertThat(wishResponseDto.getIsbn()).isEqualTo(ISBN);
+        assertThat(wishResponseDto.getUserId()).isEqualTo(USER_ID);
+
+    }
 }
