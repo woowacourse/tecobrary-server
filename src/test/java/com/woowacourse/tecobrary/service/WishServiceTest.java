@@ -59,7 +59,7 @@ class WishServiceTest {
     void findByTitle() {
         given(wishRepository.findByTitle(TITLE)).willReturn(Optional.of(WISH));
 
-        WishResponseDto wishResponseDto = wishService.findByHopeBookTitle(TITLE);
+        WishResponseDto wishResponseDto = wishService.findByTitle(TITLE);
 
         assertThat(wishResponseDto.getTitle()).isEqualTo(TITLE);
         assertThat(wishResponseDto.getImage()).isEqualTo(IMAGE);
