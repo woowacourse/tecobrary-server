@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
+	id "org.asciidoctor.convert" version "1.5.3"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -13,13 +14,38 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	snippetsDir = file('build/generated-snippets')
+}
+
+test {
+	outputs.dir snippetsDir
+}
+
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.4'
+	implementation 'mysql:mysql-connector-java'
+	implementation "org.hibernate.validator:hibernate-validator"
+	implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+	implementation 'com.h2database:h2'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'io.rest-assured:rest-assured:3.3.0'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'junit'
+	}
+	testCompile 'org.springframework.restdocs:spring-restdocs-mockmvc:2.0.3.RELEASE'
 
-	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.199'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.3.RELEASE'
 	
 	runtimeOnly 'net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1'
+	runtimeOnly 'org.springframework:spring-jdbc:+'
 }
