@@ -1,5 +1,6 @@
 package com.woowacourse.tecobrary.domain.model;
 
+import com.woowacourse.tecobrary.domain.model.core.BasicEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,8 +8,8 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"image", "title", "author", "publisher", "isbn", "desc", "userId"})
-public class Wish {
+@EqualsAndHashCode(of = {"image", "title", "author", "publisher", "isbn", "desc", "userId"}, callSuper = false)
+public class Wish extends BasicEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
