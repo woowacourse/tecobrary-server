@@ -14,17 +14,17 @@ public class BookCreateResponseDto {
     private String isbn;
     private String desc;
 
-    private BookCreateResponseDto(Book book){
-        this.id=book.getId();
-        this.url=book.getUrl();
-        this.title=book.getTitle();
-        this.author=book.getAuthor();
-        this.publisher=book.getPublisher();
-        this.isbn=book.getIsbn();
-        this.desc=book.getDesc();
+    private BookCreateResponseDto(Book book) {
+        this.id = book.getId();
+        this.url = book.getUrl();
+        this.title = book.getTitle();
+        this.author = book.getAuthor();
+        this.publisher = book.getPublisher();
+        this.isbn = book.getIsbn();
+        this.desc = book.getDesc();
     }
 
-    public static BookCreateResponseDto create(Book book){
+    public static BookCreateResponseDto create(Book book) {
         return new BookCreateResponseDto(book);
     }
 }

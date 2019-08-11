@@ -4,8 +4,9 @@ import com.woowacourse.tecobrary.domain.Book;
 import lombok.Getter;
 
 @Getter
-public class BookInfoResponseDto {
+public class BookDeleteResponseDto {
 
+    private Long id;
     private String url;
     private String title;
     private String author;
@@ -13,7 +14,8 @@ public class BookInfoResponseDto {
     private String isbn;
     private String desc;
 
-    private BookInfoResponseDto(Book book) {
+    private BookDeleteResponseDto(Book book) {
+        this.id = book.getId();
         this.url = book.getUrl();
         this.title = book.getTitle();
         this.author = book.getAuthor();
@@ -22,7 +24,7 @@ public class BookInfoResponseDto {
         this.desc = book.getDesc();
     }
 
-    public static BookInfoResponseDto create(Book book) {
-        return new BookInfoResponseDto(book);
+    public static BookDeleteResponseDto create(Book book) {
+        return new BookDeleteResponseDto(book);
     }
 }

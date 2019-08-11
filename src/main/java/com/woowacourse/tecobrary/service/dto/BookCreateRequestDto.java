@@ -13,7 +13,7 @@ public class BookCreateRequestDto {
     private String isbn;
     private String desc;
 
-    public Book toEntity(){
+    public Book toEntity() {
         return Book.builder()
                 .url(url)
                 .title(title)

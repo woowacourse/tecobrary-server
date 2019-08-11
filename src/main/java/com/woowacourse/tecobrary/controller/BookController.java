@@ -1,10 +1,7 @@
 package com.woowacourse.tecobrary.controller;
 
 import com.woowacourse.tecobrary.service.BookService;
-import com.woowacourse.tecobrary.service.dto.BookCreateRequestDto;
-import com.woowacourse.tecobrary.service.dto.BookCreateResponseDto;
-import com.woowacourse.tecobrary.service.dto.BookInfoResponseDto;
-import com.woowacourse.tecobrary.service.dto.BookNumbersResponseDto;
+import com.woowacourse.tecobrary.service.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +23,17 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public BookInfoResponseDto findBook(@PathVariable Long id){
+    public BookInfoResponseDto findBook(@PathVariable Long id) {
         return bookService.findBookById(id);
     }
 
     @PostMapping
-    public BookCreateResponseDto createBook(@RequestBody BookCreateRequestDto bookCreateRequestDto){
+    public BookCreateResponseDto createBook(@RequestBody BookCreateRequestDto bookCreateRequestDto) {
         return bookService.createBook(bookCreateRequestDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public BookDeleteResponseDto deleteBook(@PathVariable Long id) {
+        return bookService.deleteBook(id);
     }
 }
