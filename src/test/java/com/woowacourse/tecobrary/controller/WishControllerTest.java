@@ -27,6 +27,8 @@ class WishControllerTest {
     private static final String PUBLISHER = "publisher";
     private static final String ISBN = "isbn";
     private static final String DESC = "desc";
+    private static final Boolean ACTIVE = true;
+    private static final Boolean NOT_ACTIVE = false;
     private static final Long USER_ID = 1L;
 
     private static final String NEW_IMAGE = "new_image";
@@ -61,8 +63,8 @@ class WishControllerTest {
     }
 
     @Test
-    @DisplayName("희망 도서 책 요청 데이터를 url 을 요청한다.")
-    void save() {
+    @DisplayName("희망 도서 책 저장하는 url 을 요청한다.")
+    void saveWishBook() {
         WishRequestDto newWishRequestDto = WishRequestDto.builder()
                 .image(NEW_IMAGE).title(NEW_TITLE)
                 .author(NEW_AUTHOR).publisher(NEW_PUBLISHER)
@@ -82,24 +84,47 @@ class WishControllerTest {
     }
 
     @Test
-    @DisplayName("희망 도서를 찾는 url 을 요청한다.")
-    void findByTitle() {
+    @DisplayName("타이틀을 통해 희망 도서를 찾는 url 을 요청한다.")
+    void findByWishBook() {
         given().
-                contentType(String.valueOf(MediaType.APPLICATION_JSON_UTF8))
-                .param("title", TITLE)
-        .when()
-                .get("/wishes")
-        .then()
-                .assertThat()
-                .statusCode(is(200))
-                .body("id", equalTo(Integer.parseInt(wishId)))
-                .body("image", equalTo(IMAGE))
-                .body("title", equalTo(TITLE))
-                .body("author", equalTo(AUTHOR))
-                .body("publisher", equalTo(PUBLISHER))
-                .body("isbn", equalTo(ISBN))
-                .body("desc", equalTo(DESC))
-                .body("userId", equalTo(Math.toIntExact(USER_ID)));
+                contentType(String.valueOf(MediaType.APPLICATION_JSON_UTF8)).
+                param("title", TITLE).
+        when().
+                get("/wishes").
+        then().
+                assertThat().
+                statusCode(is(200)).
+                body("id", equalTo(Integer.parseInt(wishId))).
+                body("active", equalTo(ACTIVE)).
+                body("image", equalTo(IMAGE)).
+                body("title", equalTo(TITLE)).
+                body("author", equalTo(AUTHOR)).
+                body("publisher", equalTo(PUBLISHER)).
+                body("isbn", equalTo(ISBN)).
+                body("desc", equalTo(DESC)).
+                body("userId", equalTo(Math.toIntExact(USER_ID)));
+    }
+
+    @Test
+    @DisplayName("타이틀을 통해 희망 도서를 삭제하는 url 을 요청한다.")
+    void deleteByWishBook() {
+        given().
+                contentType(String.valueOf(MediaType.APPLICATION_JSON_UTF8)).
+                param("title", TITLE).
+        when().
+                delete("/wishes").
+        then().
+                assertThat().
+                statusCode(is(200)).
+                body("id", equalTo(Integer.parseInt(wishId))).
+                body("active", equalTo(NOT_ACTIVE)).
+                body("image", equalTo(IMAGE)).
+                body("title", equalTo(TITLE)).
+                body("author", equalTo(AUTHOR)).
+                body("publisher", equalTo(PUBLISHER)).
+                body("isbn", equalTo(ISBN)).
+                body("desc", equalTo(DESC)).
+                body("userId", equalTo(Math.toIntExact(USER_ID)));
     }
 
     @AfterEach
