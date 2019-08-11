@@ -27,12 +27,14 @@ class WishServiceTest {
     private static final String ISBN = "isbn";
     private static final String DESC = "desc";
     private static final Long USER_ID = 1L;
+    private static final Boolean DELETE_ACTIVE = false;
 
     private static final Wish WISH = Wish.builder()
             .title(TITLE).image(IMAGE)
             .author(AUTHOR).publisher(PUBLISHER)
             .desc(DESC).isbn(ISBN)
-            .userId(USER_ID).build();
+            .userId(USER_ID)
+            .build();
 
     @InjectMocks
     WishService wishService;
@@ -69,5 +71,14 @@ class WishServiceTest {
         assertThat(wishResponseDto.getIsbn()).isEqualTo(ISBN);
         assertThat(wishResponseDto.getUserId()).isEqualTo(USER_ID);
 
+    }
+
+    @Test
+    @DisplayName("희망 도서를 소프트 삭제 한다.")
+    void softDelete() {
+        given(wishRepository.findByTitle(TITLE)).willReturn(Optional.of(WISH));
+        WishResponseDto wishResponseDto = wishService.delete(TITLE);
+
+        assertThat(wishResponseDto.isActive()).isEqualTo(DELETE_ACTIVE);
     }
 }
