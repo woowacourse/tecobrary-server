@@ -6,6 +6,7 @@ import com.woowacourse.tecobrary.exception.WishNotFoundException;
 import com.woowacourse.tecobrary.repository.WishRepository;
 import com.woowacourse.tecobrary.service.dto.WishResponseDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class WishService {
@@ -33,10 +34,21 @@ public class WishService {
                 .orElseThrow(() -> new WishNotFoundException("요청한 책을 찾을 수 없습니다."));
 
         return WishResponseDto.builder()
-                .id(foundWish.getId()).title(foundWish.getTitle())
-                .image(foundWish.getImage()).author(foundWish.getAuthor())
-                .publisher(foundWish.getPublisher()).isbn(foundWish.getIsbn())
-                .desc(foundWish.getDesc()).userId(foundWish.getUserId())
-                .build();
+                .id(foundWish.getId()).active(foundWish.isActive())
+                .title(foundWish.getTitle()).image(foundWish.getImage())
+                .author(foundWish.getAuthor()).publisher(foundWish.getPublisher())
+                .isbn(foundWish.getIsbn()).desc(foundWish.getDesc())
+                .userId(foundWish.getUserId()).build();
     }
+
+    @Transactional
+    public WishResponseDto delete(String title) {
+        Wish foundWish = wishRepository.findByTitle(title)
+                .orElseThrow(() -> new WishNotFoundException("요청한 책을 찾을 수 없습니다."));
+
+        foundWish.softDelete();
+
+        return findByTitle(title);
+    }
+
 }

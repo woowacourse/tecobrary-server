@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class WishResponseDto {
     private Long id;
+    private boolean active;
     private String title;
     private String image;
     private String author;
@@ -17,8 +18,9 @@ public class WishResponseDto {
     private Long userId;
 
     @Builder
-    public WishResponseDto(Long id, String title, String image, String author, String publisher, String isbn, String desc, Long userId) {
+    public WishResponseDto(Long id, boolean active, String title, String image, String author, String publisher, String isbn, String desc, Long userId) {
         this.id = id;
+        this.active = active;
         this.title = title;
         this.image = image;
         this.author = author;
