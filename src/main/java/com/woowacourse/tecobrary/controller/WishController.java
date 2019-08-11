@@ -17,14 +17,17 @@ public class WishController {
     }
 
     @PostMapping
-    public ResponseEntity<WishResponseDto> createHopeBook(@RequestBody WishRequestDto wishRequestDto) {
+    public ResponseEntity<WishResponseDto> createWishBook(@RequestBody WishRequestDto wishRequestDto) {
         return new ResponseEntity<>(wishService.save(wishRequestDto), HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<WishResponseDto> findByHopeBook(@RequestParam("title") String title) {
+    public ResponseEntity<WishResponseDto> findByWishBook(@RequestParam("title") String title) {
         return new ResponseEntity<>(wishService.findByTitle(title), HttpStatus.OK);
     }
 
-
+    @DeleteMapping
+    public ResponseEntity<WishResponseDto> deleteWishBook(@RequestParam("title") String title) {
+        return new ResponseEntity<>(wishService.delete(title), HttpStatus.OK);
+    }
 }
