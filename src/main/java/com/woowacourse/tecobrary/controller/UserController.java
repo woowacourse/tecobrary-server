@@ -11,7 +11,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@Slf4j
 public class UserController {
     private UserService userService;
 
@@ -33,7 +32,6 @@ public class UserController {
     public void updateUser(@PathVariable Long id, @RequestBody String json) {
         Gson gson = new Gson();
         Map map = gson.fromJson(json, Map.class);
-        log.info("requestTest : {}", json);
 
         userService.updateUserName(id, (String) map.get("newName"));
     }
@@ -41,10 +39,5 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-    }
-
-    @PostMapping("register/github")
-    public void registerGithubUser() {
-        userService.saveCurrentGithubUser();
     }
 }
