@@ -1,7 +1,6 @@
 package com.woowacourse.tecobrary.loader;
 
 import com.woowacourse.tecobrary.domain.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -13,17 +12,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
-
-    boolean alreadySetup = false;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    private boolean alreadySetup = false;
+
+    public InitialDataLoader(RoleRepository roleRepository, PrivilegeRepository privilegeRepository) {
+        this.roleRepository = roleRepository;
+        this.privilegeRepository = privilegeRepository;
+    }
 
     @Override
     @Transactional
