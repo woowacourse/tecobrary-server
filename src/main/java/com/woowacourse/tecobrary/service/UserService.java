@@ -28,7 +28,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
-    public void saveCurrentGithubUser() {
+    public User saveCurrentGithubUser() {
         Role role = roleRepository.findByName(Role.Type.ROLE_NONE.name())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 역할입니다."));
         User user = UserFactory.makeGithubMember(role);
@@ -37,6 +37,7 @@ public class UserService {
         }
         User savedUser = userRepository.save(user);
         changeAuthentication(savedUser);
+        return savedUser;
     }
 
     private void changeAuthentication(User user) {
@@ -46,12 +47,18 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUserName(Long id, String newName) {
+    public User updateUserName(Long id, String newName) {
         User user = findById(id);
         user.updateName(newName);
+        return user;
     }
 
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public boolean deleteUser(Long id) {
+        try {
+            userRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
