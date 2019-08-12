@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Demo</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.0/js.cookie.min.js"></script>
+
+</head>
+<body>
+<h1>Demo</h1>
+<div class="container"></div>
+<div class="container unauthenticated">
+    Github Login: <a href="/login/github">click here</a>
+</div>
+
+<div class="container authenticated">
+    Logged in as: <span id="user"></span>
+    <div>
+        <button onClick="logout()" class="btn btn-primary">Logout</button>
+    </div>
+    <div>
+        <button onClick="register()" class="btn btn-primary">register</button>
+    </div>
+    <div>
+        <button onClick="editRequest()" class="btn btn-primary">editName</button>
+    </div>
+    <div>
+        <button onClick="editRoleRequest()" class="btn btn-primary">editRole</button>
+    </div>
+    <div>
+        <button onClick="deleteRequest()" class="btn btn-danger">DELETE</button>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $.get("/api/users/1", function(data) {
+        $("#user").html(data.name);
+        $(".unauthenticated").hide()
+        $(".authenticated").show()
+    });
+
+    var logout = function() {
+        $.post("/logout", function() {
+            $("#user").html('');
+            $(".unauthenticated").show();
+            $(".authenticated").hide();
+        })
+        return true;
+    }
+    $.ajaxSetup({
+        beforeSend : function(xhr, settings) {
+          if (settings.type == 'POST' || settings.type == 'PUT'
+              || settings.type == 'DELETE') {
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/
+                .test(settings.url))) {
+              // Only send the token to relative URLs i.e. locally.
+              xhr.setRequestHeader("X-XSRF-TOKEN",
+                  Cookies.get('XSRF-TOKEN'));
+            }
+          }
+        }
+    });
+
+    function AjaxCall(method) {
+        $.ajax({
+            type: method,
+            url : "json.php?mode=" + method,
+            data: createData(),
+            dataType:"json",
+            success : function(data, status, xhr) { console.log(data); },
+            error: function(jqXHR, textStatus,
+            errorThrown) { console.log(jqXHR.responseText);
+         }
+        });
+    }
+
+    var register = () => {
+        $.ajax({
+            type: 'POST',
+            url: '/api/register/github',
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var editRequest = () => {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/users/1',
+            data: JSON.stringify ({
+                "newUserName" : "new name"
+            }),
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var editRoleRequest = () => {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/users/1/roles/5',
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var deleteRequest = () => {
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/users/1',
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+</html>
