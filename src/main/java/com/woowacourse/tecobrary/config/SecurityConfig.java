@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +25,7 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Client
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private OAuth2ClientContext oauth2ClientContext;
@@ -37,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**", "/error**", "/h2-console/**").permitAll()
+                .antMatchers("/", "/login/**", "/webjars/**", "/error**", "/h2-console/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()

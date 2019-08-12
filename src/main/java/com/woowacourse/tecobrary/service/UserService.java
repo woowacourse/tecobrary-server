@@ -1,13 +1,16 @@
 package com.woowacourse.tecobrary.service;
 
 import com.woowacourse.tecobrary.controller.dto.NewUserNameRequestDto;
-import com.woowacourse.tecobrary.domain.RoleRepository;
+import com.woowacourse.tecobrary.domain.Role;
 import com.woowacourse.tecobrary.domain.User;
 import com.woowacourse.tecobrary.domain.UserRepository;
+import com.woowacourse.tecobrary.security.CurrentAuthentication;
 import com.woowacourse.tecobrary.service.dto.UserResponseDto;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,9 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    private RoleService roleService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleService roleService) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
     }
 
     public List<UserResponseDto> findAll() {
@@ -45,6 +50,18 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
         user.updateName(newUserName.getNewUserName());
+        CurrentAuthentication.change(user);
+        return user;
+    }
+
+    @Transactional
+    @Secured("ROLE_MASTER")
+    public User updateUserRole(Long userId, Long roleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        Role role = roleService.findById(roleId);
+        user.updateRole(Arrays.asList(role));
+        CurrentAuthentication.change(user);
         return user;
     }
 

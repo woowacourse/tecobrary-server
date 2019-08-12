@@ -33,7 +33,10 @@
         <button onClick="register()" class="btn btn-primary">register</button>
     </div>
     <div>
-        <button onClick="editRequest()" class="btn btn-primary">editToNew</button>
+        <button onClick="editRequest()" class="btn btn-primary">editName</button>
+    </div>
+    <div>
+        <button onClick="editRoleRequest()" class="btn btn-primary">editRole</button>
     </div>
     <div>
         <button onClick="deleteRequest()" class="btn btn-danger">DELETE</button>
@@ -42,7 +45,7 @@
 </body>
 <script type="text/javascript">
     $.get("/api/users/1", function(data) {
-        $("#user").html(data.userAuthentication.details.name);
+        $("#user").html(data.name);
         $(".unauthenticated").hide()
         $(".authenticated").show()
     });
@@ -99,6 +102,16 @@
             data: JSON.stringify ({
                 "newUserName" : "new name"
             }),
+            success: function(data) { alert('data: ' + data); },
+            contentType: "application/json",
+            dataType: 'json'
+        });
+    }
+
+    var editRoleRequest = () => {
+        $.ajax({
+            type: 'PUT',
+            url: '/api/users/1/roles/5',
             success: function(data) { alert('data: ' + data); },
             contentType: "application/json",
             dataType: 'json'

@@ -94,4 +94,8 @@ public class User {
     public void updateName(String newName) {
         this.name = newName;
     }
+
+    public void updateRole(List<Role> roles) {
+        this.roles = new ArrayList<>(roles);
+    }
 }

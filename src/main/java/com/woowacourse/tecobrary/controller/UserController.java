@@ -29,8 +29,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody NewUserNameRequestDto newName) {
+    public ResponseEntity updateUserName(@PathVariable Long id, @RequestBody NewUserNameRequestDto newName) {
         userService.updateUserName(id, newName);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/roles/{roleId}")
+    public ResponseEntity updateUserRole(@PathVariable Long id, @PathVariable("roleId") Long roleId) {
+        userService.updateUserRole(id, roleId);
         return new ResponseEntity(HttpStatus.OK);
     }
 

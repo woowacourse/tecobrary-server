@@ -2,7 +2,7 @@ package com.woowacourse.tecobrary.service;
 
 import com.woowacourse.tecobrary.domain.Role;
 import com.woowacourse.tecobrary.domain.User;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.woowacourse.tecobrary.security.CurrentAuthentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class RegisterService {
 
         Optional<User> user = userService.findByGithubId(id);
         if (user.isPresent()) {
-            changeAuthentication(user.get());
+            CurrentAuthentication.change(user.get());
             return user.get();
         }
 
@@ -42,13 +42,7 @@ public class RegisterService {
                 .avatar(map.getOrDefault("avatar_url", null))
                 .roles(Arrays.asList(role))
                 .build());
-        changeAuthentication(savedUser);
+        CurrentAuthentication.change(savedUser);
         return savedUser;
-    }
-
-    private void changeAuthentication(User user) {
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        user.getName(), null, user.getAuthorities()));
     }
 }

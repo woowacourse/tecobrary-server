@@ -16,4 +16,9 @@ public class RoleService {
         return roleRepository.findByName(type.name())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 역할입니다."));
     }
+
+    public Role findById(Long roleId) {
+        return roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 역할입니다."));
+    }
 }
