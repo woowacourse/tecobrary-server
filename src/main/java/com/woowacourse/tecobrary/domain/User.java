@@ -6,15 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,7 +41,14 @@ public class User {
 
     private String avatar;
 
-    private Enum authorization;
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private List<Role> roles;
 
     @CreationTimestamp
     private LocalDateTime createDateTime;
@@ -49,25 +57,38 @@ public class User {
     private LocalDateTime updateDateTime;
 
     @Builder
-    public User(int githubId, String email, String name, String avatar) {
+    public User(int githubId, String email, String name, String avatar, Collection<Role> roles) {
         this.githubId = githubId;
         this.email = email;
         this.name = name;
         this.avatar = avatar;
+        this.roles = new ArrayList<>();
+        this.roles.addAll(roles);
     }
 
-    public static User registerGithubUser() {
-        OAuth2Authentication authentication = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
-        Map<String, String> map = (HashMap<String, String>) authentication.getUserAuthentication().getDetails();
-        Object githubId = map.get("id");
-        int id = Integer.parseInt(githubId.toString());
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
 
-        return User.builder()
-                .githubId(id)
-                .email(map.getOrDefault("email", null))
-                .name(map.getOrDefault("name", null))
-                .avatar(map.getOrDefault("avatar_url", null))
-                .build();
+    private List<String> getPrivileges(Collection<Role> roles) {
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            privileges.add(role.getName());
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege item : collection) {
+            privileges.add(item.getName());
+        }
+        return privileges;
+    }
+
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
+        return authorities;
     }
 
     public void updateName(String newName) {
