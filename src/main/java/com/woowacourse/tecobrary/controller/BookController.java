@@ -5,6 +5,8 @@ import com.woowacourse.tecobrary.service.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/books")
@@ -22,8 +24,8 @@ public class BookController {
         return bookService.numberOfBooks();
     }
 
-    @GetMapping("/{id}")
-    public BookInfoResponseDto findBook(@PathVariable Long id) {
+    @GetMapping
+    public BookInfoResponseDto findBookById(@RequestParam Long id) {
         return bookService.findBookById(id);
     }
 
@@ -32,8 +34,13 @@ public class BookController {
         return bookService.createBook(bookCreateRequestDto);
     }
 
-    @DeleteMapping("/{id}")
-    public BookDeleteResponseDto deleteBook(@PathVariable Long id) {
+    @DeleteMapping
+    public BookDeleteResponseDto deleteBook(@RequestParam Long id) {
         return bookService.deleteBook(id);
+    }
+
+    @GetMapping("/{keyword}")
+    public List<BookInfoResponseDto> findBookByKeyword(@PathVariable String keyword) {
+        return bookService.findBooksByKeyword(keyword);
     }
 }

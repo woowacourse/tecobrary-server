@@ -7,6 +7,9 @@ import com.woowacourse.tecobrary.service.dto.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -24,7 +27,6 @@ public class BookService {
     }
 
     public BookInfoResponseDto findBookById(Long id) {
-        // Todo : 예외처리하기
         Book book = bookRepository.findById(id)
                 .orElseThrow(BookNotFoundException::new);
 
@@ -43,5 +45,12 @@ public class BookService {
 
         bookRepository.deleteById(id);
         return BookDeleteResponseDto.create(book);
+    }
+
+    public List<BookInfoResponseDto> findBooksByKeyword(String keyword) {
+        List<Book> foundBooks = bookRepository.findBooksByTitleContains(keyword);
+        return foundBooks.stream()
+                .map(BookInfoResponseDto::create)
+                .collect(toList());
     }
 }
