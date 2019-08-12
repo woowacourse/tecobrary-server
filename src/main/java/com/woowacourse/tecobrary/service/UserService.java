@@ -4,6 +4,7 @@ import com.woowacourse.tecobrary.controller.dto.NewUserNameRequestDto;
 import com.woowacourse.tecobrary.domain.Role;
 import com.woowacourse.tecobrary.domain.User;
 import com.woowacourse.tecobrary.domain.UserRepository;
+import com.woowacourse.tecobrary.exception.NotFoundUserException;
 import com.woowacourse.tecobrary.security.CurrentAuthentication;
 import com.woowacourse.tecobrary.service.dto.UserResponseDto;
 import org.springframework.security.access.annotation.Secured;
@@ -35,10 +36,13 @@ public class UserService {
         return userRepository.findByGithubId(githubId);
     }
 
-    public UserResponseDto findById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
-        return UserResponseDto.from(user);
+    public UserResponseDto findUserById(Long id) {
+        return UserResponseDto.from(findById(id));
+    }
+
+    private User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(NotFoundUserException::new);
     }
 
     public User save(User user) {
@@ -47,8 +51,7 @@ public class UserService {
 
     @Transactional
     public User updateUserName(Long id, NewUserNameRequestDto newUserName) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = findById(id);
         user.updateName(newUserName.getNewUserName());
         CurrentAuthentication.change(user);
         return user;
@@ -57,8 +60,7 @@ public class UserService {
     @Transactional
     @Secured("ROLE_MASTER")
     public User updateUserRole(Long userId, Long roleId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        User user = findById(userId);
         Role role = roleService.findById(roleId);
         user.updateRole(Arrays.asList(role));
         CurrentAuthentication.change(user);

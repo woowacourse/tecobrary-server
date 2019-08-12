@@ -2,6 +2,7 @@ package com.woowacourse.tecobrary.service;
 
 import com.woowacourse.tecobrary.domain.Role;
 import com.woowacourse.tecobrary.domain.RoleRepository;
+import com.woowacourse.tecobrary.exception.NotFoundRoleException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,11 +15,11 @@ public class RoleService {
 
     public Role findByType(Role.Type type) {
         return roleRepository.findByName(type.name())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 역할입니다."));
+                .orElseThrow(NotFoundRoleException::new);
     }
 
     public Role findById(Long roleId) {
         return roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 역할입니다."));
+                .orElseThrow(NotFoundRoleException::new);
     }
 }
