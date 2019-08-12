@@ -7,7 +7,6 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
-//@Builder
 @Entity
 @Getter
 @ToString
@@ -46,9 +45,4 @@ public class Book {
         this.isbn = isbn;
         this.desc = desc;
     }
-
-    /* 추가해야 할 부분
-    private createdAt;
-    private updateAt;
-    private deleteAt;*/
 }

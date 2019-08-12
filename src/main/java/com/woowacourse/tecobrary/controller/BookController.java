@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/books")
 @Slf4j
@@ -44,5 +43,10 @@ public class BookController {
     @GetMapping("/{keyword}")
     public ResponseEntity<List<BookInfoResponseDto>> findBookByKeyword(@PathVariable String keyword) {
         return new ResponseEntity<>(bookService.findBooksByKeyword(keyword), HttpStatus.OK);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<BookInfoResponseDto>> findBooksByPage(@RequestParam Integer page) {
+        return new ResponseEntity<>(bookService.findBooksByPage(page), HttpStatus.OK);
     }
 }
