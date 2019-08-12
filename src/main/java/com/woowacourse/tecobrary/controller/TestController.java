@@ -13,7 +13,6 @@ public class TestController {
 
     @GetMapping("/")
     public String test() {
-        log.debug("TestController >>> test method");
         return "Test Run Successfully";
     }
 }
