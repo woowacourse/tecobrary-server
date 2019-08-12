@@ -1,13 +1,13 @@
 package com.woowacourse.tecobrary.controller;
 
-import com.google.gson.Gson;
-import com.woowacourse.tecobrary.domain.User;
+import com.woowacourse.tecobrary.controller.dto.NewUserNameRequestDto;
 import com.woowacourse.tecobrary.service.UserService;
-import lombok.extern.slf4j.Slf4j;
+import com.woowacourse.tecobrary.service.dto.UserResponseDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,25 +19,24 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> readUsers() {
-        return userService.findAll();
+    public ResponseEntity<List<UserResponseDto>> readUsers() {
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public User readUser(@PathVariable Long id) {
-        return userService.findById(id);
+    public ResponseEntity<UserResponseDto> readUser(@PathVariable Long id) {
+        return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@PathVariable Long id, @RequestBody String json) {
-        Gson gson = new Gson();
-        Map map = gson.fromJson(json, Map.class);
-
-        userService.updateUserName(id, (String) map.get("newName"));
+    public ResponseEntity updateUser(@PathVariable Long id, @RequestBody NewUserNameRequestDto newName) {
+        userService.updateUserName(id, newName);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

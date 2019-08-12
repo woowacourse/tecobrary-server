@@ -1,13 +1,15 @@
 package com.woowacourse.tecobrary.service;
 
+import com.woowacourse.tecobrary.controller.dto.NewUserNameRequestDto;
 import com.woowacourse.tecobrary.domain.*;
+import com.woowacourse.tecobrary.service.dto.UserResponseDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -19,13 +21,16 @@ public class UserService {
         this.roleRepository = roleRepository;
     }
 
-    public List<User> findAll() {
-        return Collections.unmodifiableList(userRepository.findAll());
+    public List<UserResponseDto> findAll() {
+        return userRepository.findAll().stream()
+                .map(UserResponseDto::from)
+                .collect(Collectors.toList());
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id)
+    public UserResponseDto findById(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        return UserResponseDto.from(user);
     }
 
     public User saveCurrentGithubUser() {
@@ -47,9 +52,10 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUserName(Long id, String newName) {
-        User user = findById(id);
-        user.updateName(newName);
+    public User updateUserName(Long id, NewUserNameRequestDto newUserName) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.updateName(newUserName.getNewUserName());
         return user;
     }
 
