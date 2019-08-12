@@ -1,6 +1,6 @@
 package com.woowacourse.tecobrary.controller;
 
-import com.woowacourse.tecobrary.service.UserService;
+import com.woowacourse.tecobrary.service.RegisterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/register")
 public class RegisterController {
-    private UserService userService;
+    private RegisterService registerService;
 
-    public RegisterController(UserService userService) {
-        this.userService = userService;
+    public RegisterController(RegisterService registerService) {
+        this.registerService = registerService;
     }
 
     @PostMapping("/github")
     public ResponseEntity registerGithubUser() {
-        userService.saveCurrentGithubUser();
+        registerService.registerGithubUser();
         return new ResponseEntity(HttpStatus.OK);
     }
 }
