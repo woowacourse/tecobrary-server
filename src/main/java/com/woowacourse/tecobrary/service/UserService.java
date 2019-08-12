@@ -67,12 +67,10 @@ public class UserService {
         return user;
     }
 
-    public boolean deleteUser(Long id) {
-        try {
-            userRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    @Transactional
+    public User deleteUser(Long id) {
+        User user = findById(id);
+        user.softDelete();
+        return user;
     }
 }

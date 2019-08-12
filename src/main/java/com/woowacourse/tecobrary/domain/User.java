@@ -50,6 +50,9 @@ public class User {
                     name = "role_id", referencedColumnName = "id"))
     private List<Role> roles;
 
+    @Column(name = "is_active")
+    private boolean isActive = true;
+
     @CreationTimestamp
     private LocalDateTime createDateTime;
 
@@ -97,5 +100,9 @@ public class User {
 
     public void updateRole(List<Role> roles) {
         this.roles = new ArrayList<>(roles);
+    }
+
+    public void softDelete() {
+        this.isActive = false;
     }
 }
